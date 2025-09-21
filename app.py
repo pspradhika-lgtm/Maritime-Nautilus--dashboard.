@@ -20,6 +20,8 @@ def load_data():
     return df
 
 data = load_data()
+df["Cargo_Loss_Flag"] = df["Cargo_Loss"].map({"Yes": 1, "No": 0})
+
 
 # -------------------------------
 # Sidebar Filters
@@ -45,7 +47,8 @@ st.sidebar.write(f"📊 Showing {len(filtered)} records")
 c1, c2, c3 = st.columns(3)
 c1.metric("Total Incidents", len(filtered))
 c2.metric("Total Casualties", int(filtered["Casualties"].sum()))
-c3.metric("Total Cargo Loss", int(filtered["Cargo_Loss"].sum()))
+c3.metric("Total Cargo Loss", int(filtered["Cargo_Loss_Flag"].sum()))
+
 
 # -------------------------------
 # Visualizations
@@ -91,5 +94,6 @@ st.plotly_chart(fig4, use_container_width=True)
 # -------------------------------
 st.subheader("📄 Raw Data Preview")
 st.dataframe(filtered.head(50))
+
 
 
