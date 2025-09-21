@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
 # -------------------------------
@@ -56,10 +55,9 @@ c4.metric("Countries Involved", filtered["Country"].nunique())
 # -------------------------------
 # Tabs for Advanced Visuals
 # -------------------------------
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
+tab1, tab2, tab3, tab4 = st.tabs([
     "📅 Calendar Heatmap", "🎥 Animated Timeline", "🔗 Incident-Vessel Sankey",
-    "🕸 Radar Chart", "☁️ Wordcloud"
-])
+    "🕸 Radar Chart"])
 
 # 1. Calendar Heatmap
 with tab1:
@@ -138,16 +136,6 @@ with tab4:
     else:
         st.warning("No data for selected filters.")
 
-# 5. Wordcloud
-with tab5:
-    st.subheader("☁️ Wordcloud of Incident & Vessel Types")
-    if not filtered.empty:
-        text = " ".join(filtered["Incident_Type"].fillna("") + " " + filtered["Vessel_Type"].fillna(""))
-        wc = WordCloud(width=800, height=400, background_color="white").generate(text)
-        fig, ax = plt.subplots(figsize=(10,5))
-        ax.imshow(wc, interpolation="bilinear")
-        ax.axis("off")
-        st.pyplot(fig)
-    else:
-        st.warning("No data for selected filters.")
+
+
 
