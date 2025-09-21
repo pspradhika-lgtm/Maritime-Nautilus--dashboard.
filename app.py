@@ -14,14 +14,21 @@ st.title("🌊 Nautilus Maritime Incidents Dashboard")
 @st.cache_data
 def load_data():
     df = pd.read_csv("maritime_incidentsrr.csv")
-    df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
+    
+    # Normalize column names (avoid spaces/typos)
+    df.columns = df.columns.str.strip().str.replace(" ", "_")
+    
+    # Fix date
+    df["Date"] = pd.to_datetime(df["Date"], errors="coerce", dayfirst=True)
     df["Year"] = df["Date"].dt.year
     df["Month"] = df["Date"].dt.month
+    
+    # Convert Cargo_Loss Yes/No → 1/0
+    df["Cargo_Loss_Flag"] = df["Cargo_Loss"].map({"Yes": 1, "No": 0})
+    
     return df
 
 data = load_data()
-df["Cargo_Loss_Flag"] = df["Cargo_Loss"].map({"Yes": 1, "No": 0})
-
 
 # -------------------------------
 # Sidebar Filters
@@ -46,9 +53,8 @@ st.sidebar.write(f"📊 Showing {len(filtered)} records")
 # -------------------------------
 c1, c2, c3 = st.columns(3)
 c1.metric("Total Incidents", len(filtered))
-c2.metric("Total Casualties", int(filtered["Casualties"].sum()))
+c2.metric("Total Casualties", int(filtered["Casualties"].sum()))   # ✅ fixed spelling
 c3.metric("Total Cargo Loss", int(filtered["Cargo_Loss_Flag"].sum()))
-
 
 # -------------------------------
 # Visualizations
@@ -80,7 +86,7 @@ fig4 = px.scatter_mapbox(
     lat="Latitude",
     lon="Longitude",
     hover_name="Incident_Type",
-    hover_data=["Country", "Vessel_Type", "Casualities", "Cargo_Loss"],
+    hover_data=["Country", "Vessel_Type", "Casualties", "Cargo_Loss"],  # ✅ fixed typo
     color="Incident_Type",
     size_max=12,
     zoom=2,
@@ -94,6 +100,4 @@ st.plotly_chart(fig4, use_container_width=True)
 # -------------------------------
 st.subheader("📄 Raw Data Preview")
 st.dataframe(filtered.head(50))
-
-
 
