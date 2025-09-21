@@ -44,7 +44,7 @@ st.sidebar.write(f"📊 Showing {len(filtered)} records")
 # -------------------------------
 c1, c2, c3 = st.columns(3)
 c1.metric("Total Incidents", len(filtered))
-c2.metric("Total Casualties", int(filtered["Casualities"].sum()))
+c2.metric("Total Casualties", int(filtered["Casualties"].sum()))
 c3.metric("Total Cargo Loss", int(filtered["Cargo_Loss"].sum()))
 
 # -------------------------------
@@ -91,4 +91,5 @@ st.plotly_chart(fig4, use_container_width=True)
 # -------------------------------
 st.subheader("📄 Raw Data Preview")
 st.dataframe(filtered.head(50))
+
 
